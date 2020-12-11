@@ -10,6 +10,9 @@ def pad_left(str, padlength=5):
     return f"{padding}{str}"
 
 
+# check https: // pyformat.info/  # string_pad_align
+
+
 def arithmetic_arranger(problems, solve=False):
     if len(problems) > 5:
         return "Error: Too many problems."
@@ -29,12 +32,12 @@ def arithmetic_arranger(problems, solve=False):
             return "Error: Operator must be '" + ("' or '".join(allowed_ops)) + "'."
 
         longest_op = len(op1) if len(op1) > len(op2) else len(op2)
-        r1_item = pad_left(op1, 4-longest_op)
-        row1 = row1 + (r1_item if idx == 0 else pad_left(r1_item))
-        r2_item = operator + (" " * (4-longest_op+1)) + op2
+        r2_item = operator + (" " * (longest_op+1-len(op2))) + op2
         row2 = row2 + (r2_item if idx == 0 else pad_left(r2_item))
         r3_item = "-" * len(r2_item)
         row3 = row3 + (r3_item if idx == 0 else pad_left(r3_item))
+        r1_item = pad_left(op1, len(r3_item))
+        row1 = row1 + r1_item
 
         # optional solve
         if(solve):
