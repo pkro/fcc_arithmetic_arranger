@@ -5,12 +5,9 @@ ops = {'+': (lambda op1, op2: int(op1) + int(op2)),
        '-': (lambda op1, op2: int(op1) - int(op2))}
 
 
-def pad_left(str, padlength=5):
+def pad_left(str, padlength=4):
     padding = " "*padlength
     return f"{padding}{str}"
-
-
-# check https: // pyformat.info/  # string_pad_align
 
 
 def arithmetic_arranger(problems, solve=False):
@@ -36,14 +33,17 @@ def arithmetic_arranger(problems, solve=False):
         row2 = row2 + (r2_item if idx == 0 else pad_left(r2_item))
         r3_item = "-" * len(r2_item)
         row3 = row3 + (r3_item if idx == 0 else pad_left(r3_item))
-        r1_item = pad_left(op1, len(r3_item))
-        row1 = row1 + r1_item
+        r1_item = pad_left(op1, len(r3_item)-len(op1))
+        row1 = row1 + (r1_item if idx == 0 else pad_left(r1_item))
 
         # optional solve
         if(solve):
             operation_func = ops[operator]
-            result = operation_func(op1, op2)
-            solution_row = solution_row + pad_left(str(result))
-
-    arranged_problems = "\n".join([row1, row2, row3, solution_row])
+            result = str(operation_func(op1, op2))
+            result = pad_left(result, len(r3_item)-len(result))
+            solution_row = solution_row + \
+                (result if idx == 0 else pad_left(result))
+            arranged_problems = "\n".join([row1, row2, row3, solution_row])
+        else:
+            arranged_problems = "\n".join([row1, row2, row3])
     return arranged_problems
