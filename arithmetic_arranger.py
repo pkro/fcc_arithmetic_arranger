@@ -19,8 +19,8 @@ def arithmetic_arranger(problems, solve=False):
 
     allowed_ops = ops.keys()
     for idx, problem in enumerate(problems):
-        # Error handling
         (op1, operator, op2) = problem.split(" ")
+        # Error handling
         if not_numeric.search(op1) or not_numeric.search(op2):
             return "Error: Numbers must only contain digits."
         if len(op1) > 4 or len(op2) > 4:
@@ -28,22 +28,24 @@ def arithmetic_arranger(problems, solve=False):
         if operator not in allowed_ops:
             return "Error: Operator must be '" + ("' or '".join(allowed_ops)) + "'."
 
-        longest_op = len(op1) if len(op1) > len(op2) else len(op2)
+        longest_op = max(len(op1), len(op2))
+        pad = ((lambda s: s) if idx == 0 else (lambda s: pad_left(s)))
         r2_item = operator + (" " * (longest_op+1-len(op2))) + op2
-        row2 = row2 + (r2_item if idx == 0 else pad_left(r2_item))
+        row2 = row2 + pad(r2_item)
         r3_item = "-" * len(r2_item)
-        row3 = row3 + (r3_item if idx == 0 else pad_left(r3_item))
+        row3 = row3 + pad(r3_item)
         r1_item = pad_left(op1, len(r3_item)-len(op1))
-        row1 = row1 + (r1_item if idx == 0 else pad_left(r1_item))
+        row1 = row1 + pad(r1_item)
 
         # optional solve
-        if(solve):
+        if solve:
             operation_func = ops[operator]
             result = str(operation_func(op1, op2))
             result = pad_left(result, len(r3_item)-len(result))
-            solution_row = solution_row + \
-                (result if idx == 0 else pad_left(result))
-            arranged_problems = "\n".join([row1, row2, row3, solution_row])
-        else:
-            arranged_problems = "\n".join([row1, row2, row3])
-    return arranged_problems
+            solution_row = solution_row + pad(result)
+
+    arranged_problems = [row1, row2, row3]
+    if solve:
+        arranged_problems.append(solution_row)
+
+    return "\n".join(arranged_problems)
